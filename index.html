@@ -5,42 +5,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Name Check</title>
     <style>
+        *,
+        *::after,
+        *::before {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark-color: #000;
+            --accent-color: #00fffa;
+            --light-color: #f0f0f0;
+            --error-color: #ff4c4c;
+        }
+
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            background-color: #f0f0f0;
+            min-height: 100vh;
+            background-color: var(--dark-color);
             font-family: Arial, sans-serif;
+            color: var(--light-color);
+            overflow: hidden;
+            perspective: 1000px;
+            text-align: center;
         }
+
+        .night {
+            position: fixed;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100%;
+            filter: blur(0.1vmin);
+            background-image: radial-gradient(ellipse at top, transparent 0%, var(--dark-color)),
+                             radial-gradient(ellipse at bottom, var(--dark-color), rgba(145, 233, 255, 0.2)),
+                             repeating-linear-gradient(220deg, black 0px, black 19px, transparent 19px, transparent 22px),
+                             repeating-linear-gradient(189deg, black 0px, black 19px, transparent 19px, transparent 22px),
+                             repeating-linear-gradient(148deg, black 0px, black 19px, transparent 19px, transparent 22px),
+                             linear-gradient(90deg, var(--accent-color), var(--light-color));
+            z-index: -1;
+        }
+
+        .night::before, .night::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            animation: stars 200s linear infinite;
+        }
+
+        .night::before {
+            background: radial-gradient(2px 2px at 20px 30px, white, transparent),
+                        radial-gradient(2px 2px at 40px 70px, white, transparent),
+                        radial-gradient(2px 2px at 200px 100px, white, transparent),
+                        radial-gradient(2px 2px at 250px 200px, white, transparent);
+        }
+
+        .night::after {
+            background: radial-gradient(1px 1px at 30px 50px, white, transparent),
+                        radial-gradient(1px 1px at 80px 90px, white, transparent),
+                        radial-gradient(1px 1px at 300px 150px, white, transparent),
+                        radial-gradient(1px 1px at 450px 300px, white, transparent);
+        }
+
+        @keyframes stars {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-100%);
+            }
+        }
+
         input {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 12px;
+            font-size: 18px;
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
             margin-bottom: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: var(--light-color);
+            outline: none;
+            width: 300px;
+            text-align: center;
         }
+
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
+            padding: 12px 24px;
+            font-size: 18px;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
+
         button:hover {
-            background-color: #45a049;
+            background-color: var(--light-color);
+            transform: scale(1.05);
         }
+
         .error {
-            color: red;
+            color: var(--error-color);
             font-size: 18px;
             display: none;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
+    <div class="night"></div>
     <input type="text" id="nameInput" placeholder="Enter your name">
     <button onclick="checkName()">Submit</button>
     <p id="errorMessage" class="error">Sorry, you must be great, but you're not Mehak.</p>
